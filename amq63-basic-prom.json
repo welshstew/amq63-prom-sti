@@ -10,10 +10,10 @@
             "openshift.io/display-name": "Red Hat JBoss A-MQ 6.3 (Ephemeral, no SSL)",
             "openshift.io/provider-display-name": "Red Hat, Inc."
         },
-        "name": "amq63-basic"
+        "name": "amq63-basic-prom"
     },
     "labels": {
-        "template": "amq63-basic",
+        "template": "amq63-basic-prom",
         "xpaas": "1.4.10"
     },
     "message": "A new messaging service has been created in your project. It will handle the protocol(s) \"${MQ_PROTOCOL}\". The username/password for accessing the service is ${MQ_USERNAME}/${MQ_PASSWORD}.",
@@ -249,7 +249,7 @@
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                                "name": "jboss-amq-63:latest"
+                                "name": "amq63-prom-sti:latest"
                             }
                         }
                     },
@@ -368,7 +368,7 @@
                                     },
                                     {
                                         "name": "ACTIVEMQ_OPTS",
-                                        "value": "/opt/amq/lib/jmx_prometheus_javaagent-0.10.jar=9779:/opt/amq/conf/promconfig.yml"
+                                        "value": "-javaagent:/opt/amq/lib/jmx_prometheus_javaagent-0.10.jar=9779:/opt/amq/conf/promconfig.yml"
                                     }
                                 ]
                             }
