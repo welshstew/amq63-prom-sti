@@ -17,6 +17,12 @@ oc new-build registry.access.redhat.com/jboss-amq-6/amq63-openshift:latest~https
 oc new-app --template=amq63-basic-prom -p MQ_QUEUES=hello1 -p IMAGE_STREAM_NAMESPACE=mydemo
 ```
 
+## Template Additions
+
+- Pod containerport 9779 is exposed
+- New service exposing the prometheus endpoint 80 -> 9779
+- ACTIVEMQ_OPTS added as an ENV var prepopulated with prometheus javaagent stuff
+
 
 ## Running
 
@@ -81,6 +87,49 @@ queue_size{destination="hello1",} 4.0
 queue_size{destination="ActiveMQ.Advisory.Queue",} 0.0
 queue_size{destination="ActiveMQ.Advisory.Producer.Queue.hello1",} 0.0
 ```
+
+## Prometheus yaml...
+
+broker-amq-prom service is used to collect the stats
+
+See https://brunonetid.github.io/2017/11/27/camel-prometheus-openshift.html to build the prometheus container
+
+```
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Scraping could be configured for specific IPs, or using discovery mechanisms
+scrape_configs:
+
+  - job_name: 'my-service-endpoints'
+    kubernetes_sd_configs:
+    - role: endpoints
+
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_service_name]
+      action: keep
+      regex: broker-amq-prom
+    - source_labels: [__meta_kubernetes_pod_container_port_name]
+      action: keep
+      regex: prometheus
+```
+
+
+## Setting up Prometheus and Grafana
+
+Please see https://brunonetid.github.io/2017/11/27/camel-prometheus-openshift.html for how to build the Grafana and Prometheus containers.
+Please note to use the above prometheus.yml config in order to pick up the broker-amq-prom stats.
+
+### Prometheus
+
+![Prometheus Grab](./img/prometheus-grab.png)
+
+### Grafana
+
+![Grafana Grab](./img/grafana-grab.png)
 
 
 ## References

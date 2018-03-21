@@ -200,6 +200,30 @@
             "kind": "Service",
             "apiVersion": "v1",
             "spec": {
+                "ports": [
+                    {
+                        "port": 80,
+                        "targetPort": 9779
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}-amq"
+                }
+            },
+            "metadata": {
+                "name": "${APPLICATION_NAME}-amq-prom",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The broker's prometheus port."
+                }
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "spec": {
                 "clusterIP": "None",
                 "ports": [
                     {
