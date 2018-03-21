@@ -41,6 +41,17 @@ ACTIVEMQ_HOME: /opt/amq
 ssh into the pod and curl the prometheus endpoint to confirm the statistics required are scraped.
 
 ```
+[user@localhost amq63-prom-sti]$ oc rsh broker-amq-4-5kw68
+sh-4.2$ curl localhost:9779
+# HELP jvm_classes_loaded The number of classes that are currently loaded in the JVM
+# TYPE jvm_classes_loaded gauge
+...
+# HELP queue_size Queue Size
+# TYPE queue_size gauge
+queue_size{destination="hello1",} 0.0
+queue_size{destination="ActiveMQ.Advisory.Queue",} 0.0
+queue_size{destination="ActiveMQ.Advisory.MasterBroker",} 0.0
+...
 
 ```
 
