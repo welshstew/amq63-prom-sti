@@ -14,6 +14,7 @@ Sti just bundles in the jar and prometheus yml config, in `configuration/promcon
 oc new-project mydemo
 oc import-image jboss-amq-63 --from=registry.access.redhat.com/jboss-amq-6/amq63-openshift --confirm -n openshift
 oc new-build registry.access.redhat.com/jboss-amq-6/amq63-openshift:latest~https://github.com/welshstew/amq63-prom-sti.git
+oc create -f amq63-basic-prom.json
 oc new-app --template=amq63-basic-prom -p MQ_QUEUES=hello1 -p IMAGE_STREAM_NAMESPACE=mydemo
 ```
 
